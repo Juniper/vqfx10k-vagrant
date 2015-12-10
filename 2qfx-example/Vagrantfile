@@ -1,0 +1,40 @@
+
+#
+# TODO add description and disclaimer
+#
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.ssh.insert_key = false
+
+    (1..2).each do |id|
+        re_name  = ( "vqfx" + id.to_s ).to_sym
+        pfe_name = ( "vqfx" + id.to_s + "-pfe" ).to_sym
+
+        ## Routing Engine
+        config.vm.define re_name do |vqfx|
+            vqfx.vm.box = 'vqfx10k-reXXXX'
+
+            # Management port
+            vqfx.vm.network 'private_network', type: 'dhcp'    # Management Interface (em0)
+            vqfx.vm.network 'private_network', type: 'dhcp'    # Management Interface (em1)
+
+            vqfx.vm.network 'private_network', virtualbox__intnet: "vqfx_internal_#{id}"  # Management Interface (em2)
+
+            ## Dataplane ports
+            (1..6).each do |seg_id|
+                vqfx.vm.network 'private_network', virtualbox__intnet: "seg#{seg_id}"
+            end
+        end
+
+        ## Packet Forwarding Engine
+        config.vm.define pfe_name do |vqfx-pfe|
+            vqfx-pfe.vm.box = 'vqfx10k-pfe-XXXX'
+
+            vqfx-pfe.vm.network 'private_network', type: 'dhcp'    # Management Interface (eth0)
+            vqfx-pfe.vm.network 'private_network', virtualbox__intnet: "vqfx_internal_#{id}"  # Management Interface (eth1
+        end
+    end
+end
