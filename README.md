@@ -8,7 +8,12 @@
  To be confirmed ?
  - Ansible
  - Junos module for Ansible
-pip install junos-eznc 1.2.2
+
+
+```
+apt-get install ansible
+ansible-galaxy install Juniper.junos
+```
 
 # vQFX10K architecture and limitations
 
