@@ -9,6 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.ssh.insert_key = false
 
+
     (1..2).each do |id|
         re_name  = ( "vqfx" + id.to_s ).to_sym
         pfe_name = ( "vqfx" + id.to_s + "-pfe" ).to_sym
@@ -23,10 +24,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             # DO NOT REMOVE / NO VMtools installed
             vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
 
-            vqfxpfe.vm.network 'private_network', auto_config: false, virtualbox__intnet: "vqfx_internal_#{id}"
+            vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
 
             vqfxpfe.vm.provider "virtualbox" do |v|
-                v.customize ["modifyvm", :id, "--memory", "1000"]
+                v.customize ["modifyvm", :id, "--memory", "2048"]
             end
         end
 
@@ -41,17 +42,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
             # Management port
-            vqfx.vm.network 'private_network', auto_config: false, virtualbox__intnet: "vqfx_internal_#{id}"
-            vqfx.vm.network 'private_network', auto_config: false, virtualbox__intnet: "reserved-bridge"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
 
-            vqfx.vm.network 'private_network', ip: "10.1.2.2", nic_type: 'virtio', virtualbox__intnet: '1-2'
-            ## Dataplane ports
-            #(1..6).each do |seg_id|
-            #    vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "seg#{seg_id}"
-            #end
+            # Dataplane ports
+            (1..6).each do |seg_id|
+               vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
+            end
 
             vqfx.vm.provider "virtualbox" do |v|
               v.customize ["modifyvm", :id, "--memory", "1024"]
+            end
+
+            config.vm.provision "ansible" do |ansible|
+                ansible.groups = {
+                    "vqfx10k" => ["vqfx1", "vqfx2" ],
+                    "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
+                    "all:children" => ["vqfx10k", "vqfx10k-pfe"]
+                }
+                ansible.playbook = "provisioning/save-config.p.yaml"
             end
         end
     end
