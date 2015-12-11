@@ -45,6 +45,6 @@ vagrant box add {box name} {box path}
 
 Both vqfx10k-re and vqfx10k-pfe need to be installed
 ```
-vagrant box add vqfx10k-re /{path to box file}/vqfx10k-re-virtualbox.box
-vagrant box add vqfx10k-pfe /{path to box file}/vqfx10k-pfe1-virtualbox.box  
+vagrant box add juniper/vqfx10k-re /{path to box file}/vqfx10k-re-virtualbox.box
+vagrant box add juniper/vqfx10k-pfe /{path to box file}/vqfx10k-pfe1-virtualbox.box  
 ```
