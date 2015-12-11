@@ -1,5 +1,5 @@
 # This task gets all Junos configuration from all devices
-- name: Get configuration
+- name: Generate and Deploy Configuration
   hosts: vqfx10k
   connection: local
   gather_facts: no

@@ -10,6 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     (1..2).each do |id|
         re_name  = ( "vqfx" + id.to_s ).to_sym
+        srv_name  = ( "srv" + id.to_s ).to_sym
 
         ##########################
         ## Routing Engine  #######
@@ -41,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ##########################
         ## Server          #######
         ##########################
-        config.vm.define "server" do |srv|
+        config.vm.define srv_name do |srv|
             srv.vm.box = "robwc/minitrusty64"
             srv.vm.hostname = "server#{id}"
             srv.vm.network 'private_network', ip: "10.10.#{id}.2", virtualbox__intnet: "server_vqfx#{id}"
@@ -53,12 +54,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ## Box provisioning    #######
     ##############################
 
-    config.vm.provision "ansible" do |ansible|
-        ansible.groups = {
-            "vqfx10k" => ["vqfx1", "vqfx2" ],
-            "server"  => ["server1", "server2" ],
-            "all:children" => ["vqfx10k", "server"]
-        }
-        ansible.playbook = "provisioning/deploy-config.p.yaml"
-    end
+      config.vm.provision "ansible" do |ansible|
+          ansible.groups = {
+              "vqfx10k" => ["vqfx1", "vqfx2" ],
+              "server"  => ["server1", "server2" ],
+              "all:children" => ["vqfx10k", "server"]
+          }
+          ansible.playbook = "provisioning/deploy-config.p.yaml"
+      end
 end
