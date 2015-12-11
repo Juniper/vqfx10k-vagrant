@@ -6,11 +6,15 @@
   roles:
     - Juniper.junos
   tasks:
-    - name: Getting config ... please wait
-      junos_get_config:
+    - name: Build configuration
+      template: src=vqfx.conf.j2 dest=/tmp/{{ inventory_hostname }}.conf
+    - name: Deploy config to device ... please wait
+      junos_install_config:
         host={{ ansible_ssh_host }}
         port={{ ansible_ssh_port }}
         user=root
         passwd=Juniper
-        dest={{ inventory_hostname }}.conf
+        file=/tmp/{{ inventory_hostname }}.conf
+        overwrite=yes
+        replace=no
         logfile=/tmp/changes.log
