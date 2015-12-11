@@ -60,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                     "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
                     "all:children" => ["vqfx10k", "vqfx10k-pfe"]
                 }
-                ansible.playbook = "provisioning/save-config.p.yaml"
+                ansible.playbook = "provisioning/deploy-config.p.yaml"
             end
         end
     end
