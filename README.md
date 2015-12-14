@@ -2,11 +2,19 @@
 This repository is a library of examples/demo using Vagrant and vqfx10K.  
 Each example has its own directory and will contain at minima a Vagrantfile
 
+To try an example, you just have to go inside a specific directory and do "vagrant up"
+```
+git clone https://github.com/Juniper/vqfx10k-vagrant.git
+cd vqfx10k-vagrant/light-2qfx
+vagrant up
+```
+
 Available examples
-- full-1qfx-1srx (add link)[]
-- full-2qfx (add link)[]
-- light-2qfx (add link)[]
-- light-2qfx-2srx (add link)[]
+- [full-1qfx-1srx](https://github.com/Juniper/vqfx10k-vagrant/tree/master/full-1qfx-1srv)
+- [full-2qfx](https://github.com/Juniper/vqfx10k-vagrant/tree/master/full-2qfx)
+- [light-1qfx](https://github.com/Juniper/vqfx10k-vagrant/tree/master/light-1qfx)
+- [light-2qfx](https://github.com/Juniper/vqfx10k-vagrant/tree/master/light-2qfx)
+- [light-2qfx-2srx](https://github.com/Juniper/vqfx10k-vagrant/tree/master/light-2qfx-2srx)
 
 # How to contribute
 
@@ -17,16 +25,15 @@ Contribution to this repository are welcome and encouraged, especially to:
 
 ### Guideline to create a new example
 
-
+TODO
 
 ### How to provide feedback or report issue
 
-
+the best solution to provide feedback is to open a new issue on the [github tracker](https://github.com/Juniper/vqfx10k-vagrant/issues) associated with this repo
 
 # Vagrant providers
 
 For now, only Virtualbox is supported as a provider  
-Later, VMWare will be supported
 
 # vQFX10K Mode, Architecture and Limitations
 
@@ -112,11 +119,20 @@ For Linux and MacOS, some examples require:
 
 (add link to vagrant)
 
-#### How to install Ansible on Linux
+#### How to install Ansible on MacOS
+```
+add command here
+```
+
+#### How to install Ansible on Ubuntu/Linux
 ```
 apt-get install ansible
 ansible-galaxy install Juniper.junos
 ```
+
+#### How to install Ansible for Windows
+
+http://www.azavea.com/blogs/labs/2014/10/running-vagrant-with-ansible-provisioning-on-windows/
 
 ## Install Box file locally
 
