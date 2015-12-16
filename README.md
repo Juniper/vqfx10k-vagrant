@@ -1,6 +1,8 @@
 
 This repository is a library of examples/demo using Vagrant and vqfx10K.  
-Each example has its own directory and will contain at minima a Vagrantfile
+Each example has its own directory and will contain at least a Vagrantfile
+
+>during the beta, you have to install first both images, [instruction are available here](https://github.com/Juniper/vqfx10k-vagrant#install-box-file-locally) and [images are available here](https://github.com/Juniper/vqfx10k-vagrant/releases/tag/v0.1-alpha)
 
 To try an example, you just have to go inside a specific directory and do "vagrant up"
 ```
