@@ -37,7 +37,9 @@ TODO
 
 ### How to provide feedback or report issue
 
-The best solution to provide feedback is to open a new issue on the [github tracker](https://github.com/Juniper/vqfx10k-vagrant/issues) associated with this repo
+The best solution to provide feedback is to open a new issue on the [github tracker](https://github.com/Juniper/vqfx10k-vagrant/issues) associated with this repo.  
+
+Before opening a new issue, check the [troubleshooting guide - work in progress](https://github.com/Juniper/vqfx10k-vagrant/wiki/Troubleshooting-Guide)
 
 # vQFX10K
 
