@@ -17,12 +17,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
         # Management port (em1 / em2)
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', intnet: "reserved-bridge"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', intnet: "reserved-bridge"
 
         # (em3  em8)
         (1..2).each do |seg_id|
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', intnet: "segment"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', intnet: "segment"
         end
     end
 end

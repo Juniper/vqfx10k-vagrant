@@ -19,16 +19,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
             # Management port (em1 / em2)
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "vqfx_internal_#{id}"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
 
-            # Dataplane ports
-            # (em3)
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "server_vqfx#{id}"
+            # Dataplane ports (em3)
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "server_vqfx#{id}"
 
             # (em4, em5)
             (1..2).each do |seg_id|
-                vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
+                vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "seg#{seg_id}"
             end
         end
     end
