@@ -13,17 +13,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ##############################
     config.vm.define pfe_name do |vqfxpfe|
         vqfxpfe.ssh.insert_key = false
-        vqfxpfe.vm.hostname = "vqfx-pfe"
         vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
 
         # DO NOT REMOVE / NO VMtools installed
         vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
-
-        vqfxpfe.vm.network 'private_network', ip: '169.254.0.1', nic_type: 'virtio', virtualbox__intnet: "vqfx_internal"
-
-        vqfxpfe.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--memory", "2048"]
-        end
+        vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
     end
 
     ##########################
@@ -33,12 +27,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vqfx.vm.hostname = "vqfx"
         vqfx.vm.box = 'juniper/vqfx10k-re'
         vqfx.ssh.insert_key = false
+
         # DO NOT REMOVE / NO VMtools installed
         vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
-        # Management port
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
+        # Management Ports
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "vqfx_internal"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
 
         ## Dataplane ports
         (1..6).each do |seg_id|
@@ -47,6 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         vqfx.vm.provider "virtualbox" do |v|
             v.customize ["modifyvm", :id, "--memory", "1024"]
+            v.customize ['modifyvm', :id, '--macaddress3', '08002752fe1f']
         end
     end
 
@@ -56,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "srv" do |srv|
         srv.vm.box = "robwc/minitrusty64"
         srv.vm.hostname = "server"
-        srv.vm.network 'private_network', ip: "10.1.2.1", virtualbox__intnet: "seg1"
+        srv.vm.network 'private_network', ip: "10.1.2.2", virtualbox__intnet: "seg1"
         srv.ssh.insert_key = true
     end
 end
