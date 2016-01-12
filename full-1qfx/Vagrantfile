@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    re_name  = "vqfx"
+    pfe_name = "vqfx-pfe"
+
+    ##############################
+    ## Packet Forwarding Engine ##
+    ##############################
+    config.vm.define pfe_name do |vqfxpfe|
+        vqfxpfe.ssh.insert_key = false
+        vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
+
+        # DO NOT REMOVE / NO VMtools installed
+        vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
+        vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
+    end
+
+    ##########################
+    ## Routing Engine  #######
+    ##########################
+    config.vm.define re_name do |vqfx|
+        vqfx.ssh.insert_key = false
+        vqfx.vm.hostname = "vqfx"
+        vqfx.vm.box = 'juniper/vqfx10k-re'
+
+        # DO NOT REMOVE / NO VMtools installed
+        vqfx.vm.synced_folder '.', '/vagrant', disabled: true
+
+        # Management ports
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "vqfx_internal"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
+
+        ## Dataplane ports
+        (1..6).each do |seg_id|
+           vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "seg#{seg_id}"
+        end
+
+        vqfx.vm.provider "virtualbox" do |v|
+            v.customize ["modifyvm", :id, "--memory", "1024"]
+        end
+    end
+end
