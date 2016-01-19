@@ -67,6 +67,7 @@ Only few features are not supported due to some architecture differences between
 Not supported features:
  - Analytics
  - Guest VM/ Guest container
+ - EVPN
 
 ### Mode Light
 
