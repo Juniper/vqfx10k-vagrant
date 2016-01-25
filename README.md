@@ -2,7 +2,7 @@
 This repository is a library of examples/demo using Vagrant and vqfx10K.  
 Each example has its own directory and will contain at least a Vagrantfile
 
->During the beta, you have to install both images first, instructions are available [here](https://github.com/Juniper/vqfx10k-vagrant#install-box-file-locally) and images are available [here](https://github.com/Juniper/vqfx10k-vagrant/releases/tag/v0.2-beta).
+>During the beta, you have to install both images first, instructions are available [here](https://github.com/Juniper/vqfx10k-vagrant#install-box-file-locally) and images are available [here](https://github.com/Juniper/vqfx10k-vagrant/releases/tag/v0.3-beta).
 
 To try an example, you just have to go inside a specific directory and run "vagrant up":
 ```
@@ -67,7 +67,6 @@ Only few features are not supported due to some architecture differences between
 Unsupported features:
  - Analytics
  - Guest VM/ Guest container
- - EVPN
 
 ### Light Mode
 
@@ -121,7 +120,7 @@ Vagrant is able to create VMs, connect them together and is specify configure th
 Here is a good [introduction to Vagrant for Network Engineer](https://www.dravetech.com/blog/2016/01/08/vagrant-for-network-engineers.html)
 
 ## Providers
-For now, only VirtualBox is supported as a provider. VMware will be added soon. 
+For now, only VirtualBox is supported as a provider. VMware will be added soon.
 
 # How to install and Requirement
 
