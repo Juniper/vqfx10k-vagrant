@@ -39,11 +39,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         (1..6).each do |seg_id|
            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
         end
-
-        vqfx.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--memory", "1024"]
-            #v.customize ['modifyvm', :id, '--macaddress3', '08002752fe1f']
-        end
     end
 
     ##########################
