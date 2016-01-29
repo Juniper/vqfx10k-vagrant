@@ -55,4 +55,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         srv.vm.network 'private_network', ip: "10.1.2.2", virtualbox__intnet: "seg1"
         srv.ssh.insert_key = true
     end
+
+    ##############################
+    ## Box provisioning        ###
+    ## exclude Windows host    ###
+    ##############################
+    if !Vagrant::Util::Platform.windows?
+        config.vm.provision "ansible" do |ansible|
+            ansible.groups = {
+                "vqfx10k" => ["vqfx"],
+                "all:children" => ["vqfx10k"]
+            }
+            ansible.playbook = "provisioning/deploy-config.p.yaml"
+	end
+    end
 end
