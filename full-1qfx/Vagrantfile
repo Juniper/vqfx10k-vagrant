@@ -32,16 +32,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
         # Management ports
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "vqfx_internal"
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
 
         ## Dataplane ports
         (1..6).each do |seg_id|
-           vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "seg#{seg_id}"
-        end
-
-        vqfx.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--memory", "1024"]
+           vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
         end
     end
 end

@@ -1,5 +1,5 @@
 
-This Vagrantfile will spawn 1 instances of VQFX (Full) and 1 ubuntu server
+This Vagrantfile will spawn 1 instance of VQFX (Full)
 
 # Requirement
 
@@ -9,10 +9,10 @@ This Vagrantfile will spawn 1 instances of VQFX (Full) and 1 ubuntu server
 
 # Topology
 
-        em0|                        em0|
-    =============  xe-0/0/0     =============
-    |           | ------------- |   srv     |
-    |   vqfx    |               =============
+        em0|                       
+    =============  
+    |           |
+    |   vqfx    |
     |           |                
     =============              
         em1|                  
