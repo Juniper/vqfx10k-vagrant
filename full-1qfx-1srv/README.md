@@ -22,4 +22,8 @@ This Vagrantfile will spawn 1 instances of VQFX (Full) and 1 ubuntu server
 
 # Provisioning / Configuration
 
-No provisioning used in this project
+Both vqfx and srv will be preconfigured with Ip addresses
+
+
+- vqfx: Ansible is used to configure interface xe-0/0/0 with IP 10.1.2.1
+- srv: shell is used to configure interface eth1 with IP 10.1.2.2 
