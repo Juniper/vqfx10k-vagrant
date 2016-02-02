@@ -16,7 +16,7 @@ This Vagrantfile will spawn 1 instances of VQFX (light)
     |           |
     =============
 
-Interface em3 to em8 are all connected to the bridge "segment"
+Interface em3 to em4 are connected to the bridge "segment"
 
 # Provisioning / Configuration
 
