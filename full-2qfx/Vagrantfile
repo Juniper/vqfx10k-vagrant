@@ -21,6 +21,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             # DO NOT REMOVE / NO VMtools installed
             vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
             vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
+
+            # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
+            # vqfxpfe.vm.provider "virtualbox" do |v|
+            #    v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            # end
         end
 
         ##########################
@@ -34,12 +39,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
             # Management port
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "vqfx_internal_#{id}"
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "reserved-bridge"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
 
             # Dataplane ports
             (1..6).each do |seg_id|
-               vqfx.vm.network 'private_network', auto_config: false, nic_type: 'virtio', virtualbox__intnet: "seg#{seg_id}"
+               vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
             end
         end
     end
