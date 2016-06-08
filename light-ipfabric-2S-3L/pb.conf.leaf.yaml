@@ -1,0 +1,10 @@
+---
+- name: Create and apply configuration for Fabric
+  hosts: leaf
+  connection: local
+  gather_facts: no
+  roles:
+    - vagrant-base
+    - underlay-ebgp
+    - junos-std-l3
+    - build-config

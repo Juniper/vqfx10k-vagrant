@@ -1,0 +1,10 @@
+
+galaxy_info:
+  author: Damien Garros
+  company: Juniper Networks
+  min_ansible_version: 1.9
+  categories:
+   - networking
+
+dependencies:
+   - { role: Juniper.junos }

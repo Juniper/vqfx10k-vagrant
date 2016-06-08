@@ -1,0 +1,24 @@
+
+loopback_ip: 1.1.1.12
+
+underlay:
+    local:
+        asn: 60012
+    neighbors:
+      - interface: em5
+        name: spine1
+        asn: 60001
+        peer_ip: "{{ p2p.link3.1 }}"
+        local_ip: "{{ p2p.link3.2 }}"
+      - interface: em6
+        name: spine2
+        asn: 60002
+        peer_ip: "{{ p2p.link4.1 }}"
+        local_ip: "{{ p2p.link4.2 }}"
+
+junos_std_l3:
+    - name: em7
+      units:
+      - id: 0
+        ip: 172.16.2.1
+        mask: 24

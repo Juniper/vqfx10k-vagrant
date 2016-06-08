@@ -1,0 +1,14 @@
+
+
+
+underlay:
+  mtu_phy_int: 9192
+  mtu_logical_int: 9000
+  network_size: 31
+  bfd:
+    min_interval: 350
+    multiplier: 3
+    mode: automatic
+  networks:
+    loopbacks: 1.1.0.0/16
+    underlay: 172.16.0.0/16
