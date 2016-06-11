@@ -3,6 +3,8 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
+UUID = "OGVIFL"
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.ssh.insert_key = false
@@ -20,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
             # DO NOT REMOVE / NO VMtools installed
             vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
-            vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
+            vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx_internal_#{id}"
 
             # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
             # vqfxpfe.vm.provider "virtualbox" do |v|
@@ -39,12 +41,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
             # Management port
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal_#{id}"
-            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx_internal_#{id}"
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_reserved-bridge"
 
             # Dataplane ports
             (1..6).each do |seg_id|
-               vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
+               vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_seg#{seg_id}"
             end
         end
     end
@@ -60,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
                 "all:children" => ["vqfx10k", "vqfx10k-pfe"]
             }
-            ansible.playbook = "provisioning/deploy-config.p.yaml"
+            ansible.playbook = "pb.conf.all.commit.yaml"
         end
     end
 end
