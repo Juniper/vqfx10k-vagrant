@@ -12,6 +12,9 @@ cd vqfx10k-vagrant/light-2qfx
 vagrant up
 ```
 
+> Some topologies are using Ansible, If you don't have ansible you can start them using
+> `vagrant up --no-provision`
+
 Once both VMs are up and running, you can connect to them with:
 ```
 vagrant ssh vqfx1
