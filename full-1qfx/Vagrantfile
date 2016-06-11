@@ -3,6 +3,9 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
+## Generate a unique ID for this project
+UUID = [*('A'..'Z')].sample(6).join
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     re_name  = "vqfx"
@@ -17,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         # DO NOT REMOVE / NO VMtools installed
         vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
-        vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
+        vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx_internal"
     end
 
     ##########################
@@ -32,12 +35,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vqfx.vm.synced_folder '.', '/vagrant', disabled: true
 
         # Management ports
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "vqfx_internal"
-        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "reserved-bridge"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx_internal"
+        vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_reserved-bridge"
 
         ## Dataplane ports
-        (1..6).each do |seg_id|
-           vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "seg#{seg_id}"
+        (1..5).each do |seg_id|
+           vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_seg#{seg_id}"
         end
     end
 end

@@ -1,0 +1,34 @@
+
+host:
+    loopback:
+        ip: 1.1.1.1
+
+underlay:
+    local:
+        asn: 60001
+    neighbors:
+      - interface: em3
+        name: vqfx2 em3
+        asn: 60002
+        peer_ip: 10.10.3.2
+        local_ip: 10.10.3.1
+      - interface: em4
+        name: vqfx2 em4
+        asn: 60002
+        peer_ip: 10.10.4.2
+        local_ip: 10.10.4.1
+      - interface: em5
+        name: vqfx2 em5
+        asn: 60002
+        peer_ip: 10.10.5.2
+        local_ip: 10.10.5.1
+      - interface: em6
+        name: vqfx2 em6
+        asn: 60002
+        peer_ip: 10.10.6.2
+        local_ip: 10.10.6.1
+      - interface: em7
+        name: vqfx2 em7
+        asn: 60002
+        peer_ip: 10.10.7.2
+        local_ip: 10.10.7.1

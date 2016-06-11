@@ -1,0 +1,152 @@
+
+system {
+    host-name {{ inventory_hostname }};
+    root-authentication {
+        encrypted-password "$1$fv3Ke4LT$10nlsy3SEJy5ainm.kPTd.";
+        ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key";
+    }
+    login {
+        user vagrant {
+            uid 2000;
+            class super-user;
+            authentication {
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key";
+            }
+        }
+    }
+    services {
+        ssh {
+            root-login allow;
+        }
+        netconf {
+            ssh;
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+    extensions {
+        providers {
+            juniper {
+                license-type juniper deployment-scope commercial;
+            }
+            chef {
+                license-type juniper deployment-scope commercial;
+            }
+        }
+    }
+}
+interfaces {
+    em0 {
+        unit 0 {
+            family inet {
+                dhcp;
+            }
+        }
+    }
+    em1 {
+        unit 0 {
+            family inet {
+                address 169.254.0.2/24;
+            }
+        }
+    }
+}
+protocols {
+    lldp {
+        interface all;
+    }
+}
+vlans {
+    default {
+        vlan-id 1;
+    }
+}
+
+interfaces {
+{% for neighbor in underlay.neighbors %}
+    {{ neighbor.interface }} {
+        unit 0 {
+            description "to {{ neighbor.name }}";
+            family inet {
+                address {{ neighbor.local_ip }}/30;
+            }
+        }
+    }
+{% endfor %}
+}
+protocols {
+    bgp {
+        log-updown;
+        group underlay {
+            import bgp-clos-in;
+            export bgp-clos-out;
+            type external;
+            mtu-discovery;
+            local-as {{ underlay.local.asn }};
+            multipath multiple-as;
+{% for neighbor in underlay.neighbors %}
+            neighbor {{ neighbor.peer_ip }} {
+                peer-as {{ neighbor.asn }};
+            }
+{% endfor %}
+        }
+    }
+}
+
+routing-options {
+    router-id {{ host.loopback.ip }};
+    forwarding-table {
+        export PFE-LB;
+    }
+}
+
+policy-options {
+    policy-statement PFE-LB {
+        then {
+            load-balance per-packet;
+        }
+    }
+    policy-statement bgp-clos-in {
+        term loopbacks {
+            from {
+                route-filter 10.0.0.0/8 orlonger;
+            }
+            then accept;
+        }
+        term reject {
+            then reject;
+        }
+    }
+    policy-statement bgp-clos-out {
+        term loopback {
+            from {
+                protocol direct;
+                route-filter {{ host.loopback.ip }}/32 orlonger;
+            }
+            then {
+                next-hop self;
+                accept;
+            }
+        }
+        term server-L3-gw {
+            from {
+                protocol direct;
+                route-filter 10.0.0.0/8 orlonger;
+            }
+            then {
+                next-hop self;
+                accept;
+            }
+        }
+    }
+}
