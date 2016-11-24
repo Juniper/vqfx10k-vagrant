@@ -1,0 +1,28 @@
+# VXLAN conf for switches
+
+interfaces {
+{% for interface in vxlan_interfaces %}
+    {{ interface.name }} {
+    	description "{{ interface.description }}";
+        unit 0 {
+            family ethernet-switching {
+                vlan {
+                    members {{ interface.vlan_id }};
+                }
+            }
+        }
+    }
+{% endfor %}
+}
+
+vlans {
+{% for vlan in vxlan_interfaces %}
+    {{ vlan.vlan_name}} {
+        vlan-id {{ vlan.vlan_id }};
+        vxlan {
+            vni {{ vlan.vxlan_id }};
+            ingress-node-replication;
+        }
+    }
+{% endfor %}
+}

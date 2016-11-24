@@ -1,0 +1,30 @@
+
+inet_interfaces:
+    - name: xe-0/0/0
+      ip: 10.0.0.1/30
+      description: "connect 2 vqfx2"
+    - name: lo0
+      ip: 9.9.9.1/32
+      description: "vxlan source"
+
+vxlan_interfaces:
+    - name: xe-0/0/1
+      description: "server1"
+      vxlan_id: 10000
+      vlan_id: 100
+      vlan_name: servers100
+#    - name: xe-0/0/3
+#      description: "test"
+#      vxlan_id: 10001
+#      vlan_id: 101
+#      vlan_name: servers101
+
+
+router_id: 9.9.9.1
+neighbor: 9.9.9.2
+route_distinguisher: "9991:1"
+vrf_target: "target:64500:9991"
+local_address: 9.9.9.1
+
+
+    

@@ -1,0 +1,60 @@
+
+***
+This Vagrantfile will spawn 2 instances of VQFX (Full) each with 1 Routing Engine and 1 PFE VM  
+We will also spawn 2 server VMs pre-configured with IP's on the same subnet.
+
+Both VQFX will be connected back to back with IP address pre-configured on their interfaces
+Underlay control plane is pre-configured using OSPF.
+Overlay control plane with EVPN is pre-configured.
+Ansible playbook "pb.provision.vxlan.yaml" shoud be run after "vagrant up" which will provision one VXLAN between the 2 server VMs.
+  This VXLAN playbook/jinja2 template/yaml files can easily be tweaked to add more VXLANs
+
+# Interfaces (traffic stats are shown on em interfaces, not xe interfaces.)
+RE:
+em0 - oob mgmt interface 
+em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
+em2 - Not used
+em3 - xe-0/0/0 - Used for interconnecting switches
+em4 - xe-0/0/1 
+em5 - xe-...
+em6 - ...
+
+PFE:
+em0 - oob mgmt interface 
+em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
+
+# Requirement
+
+### Resources
+ - RAM : 6G+
+ - CPU : 3 (PFE VMs are capped to 50% CPU usage)
+
+### Tools
+ - Ansible for provisioning (except for windows)
+ - Junos module for Ansible
+
+# Topology
+
+EVPN preconfigured
+VXLAN connecting servers pre-configured
+Servers pre-configured
+
+    10.10.0.10/24               10.10.0.20/24
+    =============               =============
+    |     srv1  |-- eth0        | srv2      |-- eth0
+    =============               =============
+           | eth1                      | eth1
+  xe-0/0/1 |                  xe-0/0/2 |
+    =============    xe-0/0/0   =============
+    |           | ------------- |           |
+    | vqfx1-re  |               | vqfx2-re  |
+    |           |-- em0         |           |-- em0
+    =============               =============
+        em1|                        em1|
+    =============               =============
+    | vqfx1-pfe |-- em0         | vqfx1-pfe |-- em0
+    =============               =============
+
+# Provisioning / Configuration
+
+Ansible is used to preconfigured both VQFX with an IP address on their interfaces

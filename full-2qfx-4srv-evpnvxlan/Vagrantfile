@@ -1,0 +1,98 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+UUID = "fab1"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.ssh.insert_key = false
+
+    (1..2).each do |id|
+        re_name  = ( "vqfx" + id.to_s ).to_sym
+        pfe_name = ( "vqfx" + id.to_s + "-pfe" ).to_sym
+        srv_name  = ( "srv" + id.to_s ).to_sym
+
+        ##############################
+        ## Packet Forwarding Engine ##
+        ##############################
+        config.vm.define pfe_name do |vqfxpfe|
+            vqfxpfe.ssh.insert_key = false
+            vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
+
+            # DO NOT REMOVE / NO VMtools installed ttt
+            vqfxpfe.vm.synced_folder '.', '/vagrant', disabled: true
+
+            # Internal em1 port to RE
+            vqfxpfe.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx#{id}_internal"
+
+            # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
+            vqfxpfe.vm.provider "virtualbox" do |v|
+               v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            end
+        end
+
+        ##########################
+        ## Routing Engine  #######
+        ##########################
+        config.vm.define re_name do |vqfx|
+            vqfx.vm.hostname = "vqfx#{id}"
+            vqfx.vm.box = 'juniper/vqfx10k-re'
+
+            # DO NOT REMOVE / NO VMtools installed
+            vqfx.vm.synced_folder '.', '/vagrant', disabled: true
+
+            # Internal em1 port to PFE
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx#{id}_internal"
+            
+            # Unused em2 port we need to exclude 
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx#{id}_reserved-bridge"
+
+            # Interconnect link between vqfx (xe-0/0/0)
+            vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx_interconnect"
+
+            # Dataplane ports (Yes, dataplane ports are mapped on the RE and not PFE for vQFX10k)
+            (1..5).each do |seg_id|
+               vqfx.vm.network 'private_network', auto_config: false, nic_type: '82540EM', virtualbox__intnet: "#{UUID}_vqfx#{id}_seg#{seg_id}"
+            end
+
+        end
+    
+        ##########################
+        ## Servers         #######
+        ##########################
+        config.vm.define srv_name do |srv|
+            # Uncomment 1 line below to use minitrusty image instead of Tiny Core linux. Comment Tiny Core further down. "minitrusty" takes 512MB RAM per instance.
+            #srv.vm.box = "robwc/minitrusty64"
+            
+            # Tiny-Core linux needs some extras cuz not well supported with Vagrant. However only 64M of RAM per instance :) Has ping, ssh, ssh server.
+            # Comment 3 lines below this line and uncomment minitrusty64 above to swap server images
+            srv.vm.box = "olbat/tiny-core-micro"
+            srv.vm.synced_folder '.', '/vagrant', disabled: true
+            config.ssh.shell = "sh -l"
+
+            srv.vm.hostname = "server#{id}"
+            srv.vm.network 'private_network', ip: "10.10.0.#{id}0", virtualbox__intnet: "#{UUID}_vqfx#{id}_seg#{id}"
+            srv.ssh.insert_key = true
+            #srv.vm.provision "shell",
+               #inline: "sudo route add -net 10.10.0.0 netmask 255.255.255.0 gw 10.10.#{id}.254"
+        end
+    end
+
+
+    ##############################
+    ## Box provisioning        ###
+    ## exclude Windows host    ###
+    ##############################
+    if !Vagrant::Util::Platform.windows?
+        config.vm.provision "ansible" do |ansible|
+            ansible.groups = {
+                "vqfx10k" => ["vqfx1", "vqfx2" ],
+                "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
+                "all:children" => ["vqfx10k", "vqfx10k-pfe"]
+            }
+            ansible.playbook = "pb.conf.all.commit.yaml"
+        end
+    end
+end
