@@ -9,15 +9,22 @@ inet_interfaces:
 
 vxlan_interfaces:
     - name: xe-0/0/1
-      description: "server1"
+      description: "server11"
       vxlan_id: 10000
       vlan_id: 100
       vlan_name: servers100
-#    - name: xe-0/0/3
-#      description: "test"
-#      vxlan_id: 10001
-#      vlan_id: 101
-#      vlan_name: servers101
+      irb_ip: 10.10.1.251/24
+      vgw_ip: 10.10.1.254
+
+    - name: xe-0/0/2
+      description: "server12"
+      vxlan_id: 20000
+      vlan_id: 200
+      vlan_name: servers200
+      irb_ip: 10.10.2.251/24
+      vgw_ip: 10.10.2.254
+
+
 
 
 router_id: 9.9.9.1
@@ -25,6 +32,3 @@ neighbor: 9.9.9.2
 route_distinguisher: "9991:1"
 vrf_target: "target:64500:9991"
 local_address: 9.9.9.1
-
-
-    

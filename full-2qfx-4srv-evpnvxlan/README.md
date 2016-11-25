@@ -1,4 +1,3 @@
-
 ***
 This Vagrantfile will spawn 2 instances of VQFX (Full) each with 1 Routing Engine and 1 PFE VM  
 We will also spawn 2 server VMs pre-configured with IP's on the same subnet.
@@ -39,20 +38,20 @@ EVPN preconfigured
 VXLAN connecting servers pre-configured
 Servers pre-configured
 
-    10.10.0.10/24               10.10.0.20/24
+ 10.10.1.10 10.10.2.10      10.10.1.20 10.10.2.20
+  ========= =========        ========= =========
+  | srv11 | | srv12 |        | srv21 | | srv22 |
+  ========= =========        ========= =========
+    eth1 |   | eth1            eth1 |   | eth1
+xe-0/0/1 |   | xe-0/0/2    xe-0/0/1 |   | xe-0/0/2
     =============               =============
-    |     srv1  |-- eth0        | srv2      |-- eth0
-    =============               =============
-           | eth1                      | eth1
-  xe-0/0/1 |                  xe-0/0/2 |
-    =============    xe-0/0/0   =============
     |           | ------------- |           |
-    | vqfx1-re  |               | vqfx2-re  |
-    |           |-- em0         |           |-- em0
+    | vqfx1-re  |    xe-0/0/0   | vqfx2-re  |
+    |           |               |           |
     =============               =============
         em1|                        em1|
     =============               =============
-    | vqfx1-pfe |-- em0         | vqfx1-pfe |-- em0
+    | vqfx1-pfe |               | vqfx1-pfe |
     =============               =============
 
 # Provisioning / Configuration

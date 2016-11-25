@@ -70,6 +70,31 @@ interfaces {
             }
         }
     }
+{% for interface in vxlan_interfaces %}
+    {{ interface.name }} {
+        description "{{ interface.description }}";
+        unit 0 {
+            family ethernet-switching {
+                vlan {
+                    members {{ interface.vlan_id }};
+                }
+            }
+        }
+    }
+{% endfor %}
+
+{% for interface in vxlan_interfaces %}
+    irb {
+        unit {{ interface.vxlan_id }} {
+            description "irb_vxlan_{{ interface.vxlan_id }}";
+            family inet {
+                address {{ interface.irb_ip }} {
+                    virtual-gateway-address {{ interface.vgw_ip }};
+                }
+            }
+        }
+    }
+{% endfor %}
 }
 routing-options {
     router-id {{ router_id }};
@@ -90,6 +115,7 @@ protocols {
         encapsulation vxlan;
         extended-vni-list all;
         multicast-mode ingress-replication;
+        default-gateway do-not-advertise;
     }    
     ospf {
         area 0.0.0.0 {
@@ -115,4 +141,14 @@ vlans {
     default {
         vlan-id 1;
     }
+    {% for vlan in vxlan_interfaces %}
+    {{ vlan.vlan_name}} {
+        vlan-id {{ vlan.vlan_id }};
+        l3-interface irb.{{ vlan.vxlan_id }};
+        vxlan {
+            vni {{ vlan.vxlan_id }};
+            ingress-node-replication;
+        }
+    }
+{% endfor %}
 }

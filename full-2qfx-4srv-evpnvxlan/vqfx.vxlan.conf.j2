@@ -13,12 +13,28 @@ interfaces {
         }
     }
 {% endfor %}
+
+{% for interface in vxlan_interfaces %}
+    irb {
+        unit {{ interface.vxlan_id }} {
+            description "irb_vxlan_{{ interface.vxlan_id }}";
+            family inet {
+                address {{ interface.irb_ip }} {
+                    virtual-gateway-address {{ interface.vgw_ip }};
+                }
+            }
+        }
+    }
+{% endfor %}
+
+
 }
 
 vlans {
 {% for vlan in vxlan_interfaces %}
     {{ vlan.vlan_name}} {
         vlan-id {{ vlan.vlan_id }};
+        l3-interface irb.{{ vlan.vxlan_id }};
         vxlan {
             vni {{ vlan.vxlan_id }};
             ingress-node-replication;

@@ -8,17 +8,21 @@ inet_interfaces:
       description: "vxlan source"      
 
 vxlan_interfaces:
-    - name: xe-0/0/2
-      description: "server2"
+    - name: xe-0/0/1
+      description: "server21"
       vxlan_id: 10000
+      vlan_id: 100
+      vlan_name: servers100
+      irb_ip: 10.10.1.252/24
+      vgw_ip: 10.10.1.254
+
+    - name: xe-0/0/2
+      description: "server22"
+      vxlan_id: 20000
       vlan_id: 200
       vlan_name: servers200
-#    - name: xe-0/0/3
-#      description: "test"
-#      vxlan_id: 10001
-#      vlan_id: 201
-#      vlan_name: servers201
-      
+      irb_ip: 10.10.2.252/24
+      vgw_ip: 10.10.2.254
 
 router_id: 9.9.9.2
 neighbor: 9.9.9.1
