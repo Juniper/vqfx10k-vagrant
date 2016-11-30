@@ -14,7 +14,7 @@ vxlan_interfaces:
       vlan_id: 100
       vlan_name: servers100
       irb_ip: 10.10.1.252/24
-      vgw_ip: 10.10.1.254
+      vga_ip: 10.10.1.254
 
     - name: xe-0/0/2
       description: "server22"
@@ -22,7 +22,7 @@ vxlan_interfaces:
       vlan_id: 200
       vlan_name: servers200
       irb_ip: 10.10.2.252/24
-      vgw_ip: 10.10.2.254
+      vga_ip: 10.10.2.254
 
 router_id: 9.9.9.2
 neighbor: 9.9.9.1

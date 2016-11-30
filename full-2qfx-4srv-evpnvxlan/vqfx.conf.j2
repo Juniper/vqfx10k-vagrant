@@ -89,7 +89,7 @@ interfaces {
             description "irb_vxlan_{{ interface.vxlan_id }}";
             family inet {
                 address {{ interface.irb_ip }} {
-                    virtual-gateway-address {{ interface.vgw_ip }};
+                    virtual-gateway-address {{ interface.vga_ip }};
                 }
             }
         }
