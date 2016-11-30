@@ -5,8 +5,8 @@ We will also spawn 2 server VMs pre-configured with IP's on the same subnet.
 Both VQFX will be connected back to back with IP address pre-configured on their interfaces
 Underlay control plane is pre-configured using OSPF.
 Overlay control plane with EVPN is pre-configured.
-Ansible playbook "pb.provision.vxlan.yaml" shoud be run after "vagrant up" which will provision one VXLAN between the 2 server VMs.
-These VXLAN playbook/jinja2 template/yaml files can easily be tweaked to add more VXLANs.
+Ansible used to configure devices.
+
 
 ## Interfaces (traffic stats are shown on em interfaces, not xe interfaces.)
 ### vqfx10k-re:
@@ -22,10 +22,10 @@ em6 - ...
 em0 - oob mgmt interface 
 em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
 
-# Requirement
+# Requirements
 
 ### Resources
- - RAM : 6G+
+ - RAM : 8G
  - CPU : 3 (PFE VMs are capped to 50% CPU usage)
 
 ### Tools
