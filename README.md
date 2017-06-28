@@ -23,7 +23,7 @@ vagrant ssh vqfx2
 
 Available examples:
 - [full-1qfx](full-1qfx)
-- [full-1qfx-1srx](full-1qfx-1srv)
+- [full-1qfx-1srv](full-1qfx-1srv)
 - [full-2qfx](full-2qfx)
 - [light-1qfx](light-1qfx)
 - [light-2qfx](light-2qfx)
