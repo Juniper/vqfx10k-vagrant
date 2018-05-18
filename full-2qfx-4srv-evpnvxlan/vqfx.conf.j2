@@ -94,6 +94,7 @@ interfaces {
                     virtual-gateway-address {{ interface.vga_ip }};
                 }
             }
+            virtual-gateway-v4-mac {{ interface.vga_mac }};
         }
     }
 {% endfor %}
