@@ -87,11 +87,14 @@ interfaces {
     irb {
         unit {{ interface.vxlan_id }} {
             description "irb_vxlan_{{ interface.vxlan_id }}";
+            proxy-macip-advertisement;
+            virtual-gateway-accept-data;
             family inet {
                 address {{ interface.irb_ip }} {
                     virtual-gateway-address {{ interface.vga_ip }};
                 }
             }
+            virtual-gateway-v4-mac {{ interface.vga_mac }};
         }
     }
 {% endfor %}
@@ -115,7 +118,7 @@ protocols {
         encapsulation vxlan;
         extended-vni-list all;
         multicast-mode ingress-replication;
-        default-gateway do-not-advertise;
+        default-gateway no-gateway-community;
     }    
     ospf {
         area 0.0.0.0 {
