@@ -84,11 +84,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             config.vm.define srv_name do |srv|
             
                 # Uncomment 1 line below to use minitrusty image instead of Tiny Core linux. Comment Tiny Core further down. "minitrusty" takes 512MB RAM per instance.
-                srv.vm.box = "robwc/minitrusty64"
+                 srv.vm.box = "robwc/minitrusty64"
             
                 # Tiny-Core linux needs extras cuz not well supported with Vagrant. Only 64M of RAM per instance! Has ping, ssh, ssh server.
                 # Comment ines below this line and uncomment minitrusty64 above to swap server images
-                #srv.vm.box = "olbat/tiny-core-micro"
+                # srv.vm.box = "olbat/tiny-core-micro"
                 #srv.vm.synced_folder '.', 
                 #    '/vagrant', 
                 #    disabled: true

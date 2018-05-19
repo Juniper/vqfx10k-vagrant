@@ -7,10 +7,12 @@
     - Juniper.junos
   tasks:
     - name: Getting config ... please wait
-      junos_get_config:
+      juniper_junos_config:
+        retrieve: commited
         host: "{{ ansible_ssh_host }}"
         port: "{{ ansible_ssh_port }}"
         user: root
         passwd: Juniper
+        format: text
         dest: "{{ inventory_hostname }}.conf"
         logfile: /tmp/changes.log
