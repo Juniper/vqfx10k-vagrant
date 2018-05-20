@@ -1,6 +1,10 @@
 # This task gets all Junos configuration from all devices
 - name: Get configuration
-  hosts: vqfx10k
+  hosts:
+    - vqfx1
+    - vqfx2
+    - vqfx3
+    - vqfx4
   connection: local
   gather_facts: no
   roles:
