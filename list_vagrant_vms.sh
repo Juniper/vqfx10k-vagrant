@@ -1,1 +1,0 @@
-vagrant global-status
