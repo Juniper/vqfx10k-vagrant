@@ -9,12 +9,13 @@
   roles:
     - Juniper.junos
   tasks:
-    - name: Pushing config ... please wait
-      junos_install_config:
+    - name: Deploy config to device ... please wait
+      juniper_junos_config:
+        load: 'override'
+        src: "{{ junos_conf }}"
         host: "{{ ansible_ssh_host }}"
         port: "{{ ansible_ssh_port }}"
         user: root
         passwd: Juniper
-        file: "{{ junos_conf }}"
-        overwrite: yes
-        replace: no
+        format: text
+        logfile: /tmp/changes.log
