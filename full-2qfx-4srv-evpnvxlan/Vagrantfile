@@ -65,7 +65,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 virtualbox__intnet: "#{UUID}_vqfx_interconnect"
 
             # Dataplane ports (Yes, dataplane ports are mapped on the RE and not PFE for vQFX10k)
-            (1..5).each do |seg_id|
+            (1..4).each do |seg_id|
                vqfx.vm.network 'private_network', 
                 auto_config: false, 
                 nic_type: '82540EM', 
