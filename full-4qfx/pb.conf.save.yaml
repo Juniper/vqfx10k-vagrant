@@ -1,16 +1,22 @@
 # This task gets all Junos configuration from all devices
 - name: Get configuration
-  hosts: vqfx10k
+  hosts:
+    - vqfx1
+    - vqfx2
+    - vqfx3
+    - vqfx4
   connection: local
   gather_facts: no
   roles:
     - Juniper.junos
   tasks:
     - name: Getting config ... please wait
-      junos_get_config:
+      juniper_junos_config:
+        retrieve: committed
         host: "{{ ansible_ssh_host }}"
         port: "{{ ansible_ssh_port }}"
         user: root
         passwd: Juniper
+        format: text
         dest: "{{ inventory_hostname }}.conf"
         logfile: /tmp/changes.log

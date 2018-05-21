@@ -8,7 +8,7 @@
   tasks:
     - name: Getting config ... please wait
       juniper_junos_config:
-        retrieve: commited
+        retrieve: committed
         host: "{{ ansible_ssh_host }}"
         port: "{{ ansible_ssh_port }}"
         user: root
