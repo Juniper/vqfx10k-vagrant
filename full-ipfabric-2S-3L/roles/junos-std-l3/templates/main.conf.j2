@@ -1,0 +1,23 @@
+
+interfaces {
+{% for interface in junos_std_l3 %}
+    {{ interface.name }} {
+{% if interface.description is defined %}
+        description "to {{ interface.description }}";
+{% endif %}
+{% if interface.vlan_tagging is defined %}
+        {{ interface.vlan_tagging }};
+{% endif %}
+{% for unit in interface.units %}
+        unit {{ unit.id }} {
+{% if interface.vlan_tagging is defined %}
+            vlan-id {{ unit.id }};
+{% endif %}
+            family inet {
+                address {{ unit.ip }}/{{ unit.mask }};
+            }
+        }
+{% endfor %}
+    }
+{% endfor %}
+}

@@ -1,0 +1,9 @@
+---
+- name: Create and apply configuration for Fabric
+  hosts: spine
+  connection: local
+  gather_facts: no
+  roles:
+    - vagrant-base
+    - underlay-ebgp
+    - build-config

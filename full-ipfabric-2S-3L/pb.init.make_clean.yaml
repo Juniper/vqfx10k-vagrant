@@ -1,0 +1,10 @@
+---
+- name: Creating build directories for each host
+  hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: remove host build temp directory
+      file: path={{ build_dir }} state=absent
+    - name: create host build temp directory
+      file: path={{ build_dir }} state=directory

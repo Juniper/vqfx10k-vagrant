@@ -1,0 +1,22 @@
+---
+# This playbook will generate and apply configuration to all of the devices
+
+- include: pb.conf.all.yaml
+
+- name: Apply configuration
+  hosts: vqfx10k
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+  tasks:
+    - name: Deploy config to device ... please wait
+      juniper_junos_config:
+        load: 'override'
+        src: "{{ junos_conf }}"
+        host: "{{ ansible_ssh_host }}"
+        port: "{{ ansible_ssh_port }}"
+        user: root
+        passwd: Juniper
+        format: text
+        logfile: /tmp/changes.log

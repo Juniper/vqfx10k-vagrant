@@ -1,0 +1,27 @@
+
+loopback_ip: 1.1.1.1
+
+underlay:
+    local:
+        asn: 60001
+    neighbors:
+      - interface: xe-0/0/0
+        name: leaf1
+        asn: 60011
+        peer_ip: "{{ p2p.link1.2 }}"
+        local_ip: "{{ p2p.link1.1 }}"
+      - interface: xe-0/0/1
+        name: leaf2
+        asn: 60012
+        peer_ip: "{{ p2p.link3.2 }}"
+        local_ip: "{{ p2p.link3.1 }}"
+      - interface: xe-0/0/2
+        name: leaf3
+        asn: 60013
+        peer_ip: "{{ p2p.link5.2 }}"
+        local_ip: "{{ p2p.link5.1 }}"
+      # - interface: xe-0/0/3
+      #   name: leaf4
+      #   asn: 60014
+      #   peer_ip: "{{ p2p.link7.2 }}"
+      #   local_ip: "{{ p2p.link7.1 }}"
