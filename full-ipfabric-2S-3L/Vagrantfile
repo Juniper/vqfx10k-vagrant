@@ -45,9 +45,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 virtualbox__intnet: "#{UUID}_spine#{id}_internal"
 
             # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
-            vqfxpfe.vm.provider "virtualbox" do |v|
-               v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
-            end
+            #vqfxpfe.vm.provider "virtualbox" do |v|
+            #   v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            #end
         end
 
         ##########################
@@ -110,9 +110,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 virtualbox__intnet: "#{UUID}_leaf#{id}_internal"
 
             # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
-            vqfxpfe.vm.provider "virtualbox" do |v|
-               v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
-            end
+            #vqfxpfe.vm.provider "virtualbox" do |v|
+            #   v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            #end
         end
 
         ##########################
