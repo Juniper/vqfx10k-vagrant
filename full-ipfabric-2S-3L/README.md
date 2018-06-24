@@ -31,8 +31,7 @@ Spine / Leaf topology with
                      |            |               |            |
                      ==============               ==============
                    xe-0/0/0 - xe-0/0/2          xe-0/0/0 - xe-0/0/2
-                                  \               /                                                                                             
-                                   \             /                                           
+                                                                           
     |xe-0/0/0 - xe-0/0/1          xe-0/0/0 - xe-0/0/1          xe-0/0/0 - xe-0/0/1
       ==============               ==============               ==============
       |            |xe-0/0/2       |            |xe-0/0/2       |            |xe-0/0/2
@@ -53,14 +52,14 @@ Spine / Leaf topology with
 
 ## Interfaces (traffic stats are shown on em interfaces, not xe interfaces.)
 ### vqfx10k-re:
-em0 - oob mgmt interface.
-em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
-em2 - Not used.
-em3-em5 (xe-0/0/0-xe-0/0/2) - Used for interconnecting switches.
+- em0 - oob mgmt interface.
+- em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
+- em2 - Not used.
+- em3-em5 (xe-0/0/0-xe-0/0/2) - Used for interconnecting switches.
 
 ### vqfx10k-pfe:
-em0 - oob mgmt interface. 
-em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
+- em0 - oob mgmt interface. 
+- em1 - Internal link to connect RE to PFE. Same interface on both RE and PFE.
 
 # Provisioning / Configuration
 
