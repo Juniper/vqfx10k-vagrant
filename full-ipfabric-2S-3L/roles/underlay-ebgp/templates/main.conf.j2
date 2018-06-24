@@ -64,7 +64,7 @@ policy-options {
         }
         term server {
             from {
-                route-filter 172.16.0.0/16 orlonger;
+                route-filter 192.168.0.0/16 orlonger;
             }
             then accept;
         }
@@ -86,7 +86,7 @@ policy-options {
         term server {
             from {
                 protocol direct;
-                route-filter 172.16.0.0/16 orlonger;
+                route-filter 192.168.0.0/16 orlonger;
             }
             then {
 {% if underlay.community is defined %}

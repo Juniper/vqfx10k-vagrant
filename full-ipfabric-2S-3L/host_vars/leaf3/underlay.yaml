@@ -20,5 +20,5 @@ junos_std_l3:
     - name: xe-0/0/2
       units:
       - id: 0
-        ip: 172.16.3.1
+        ip: 192.168.3.1
         mask: 24
