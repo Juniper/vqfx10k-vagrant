@@ -1,0 +1,184 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+## Generate a unique ID for this project
+UUID = "FullIPFabric"
+
+## Define port mapping to build the Fabric
+spine_port_map = {  1 => [1,3,5,7],
+                    2 => [2,4,6,8] }
+
+leaf_port_map  = {  1 => [1,2],
+                    2 => [3,4],
+                    3 => [5,6],
+                    4 => [7,8]}
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.ssh.insert_key = false
+
+    ##########################
+    ## Spine           #######
+    ##########################
+    (1..2).each do |id|
+        re_name  = ( "spine" + id.to_s ).to_sym
+        pfe_name = ( "spine" + id.to_s + "-pfe" ).to_sym
+
+        ##############################
+        ## Packet Forwarding Engine ##
+        ##############################
+        config.vm.define pfe_name do |vqfxpfe|
+            vqfxpfe.ssh.insert_key = false
+            vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
+            vqfxpfe.vm.boot_timeout = 600
+
+            # DO NOT REMOVE / NO VMtools installed ttt
+            vqfxpfe.vm.synced_folder '.', 
+                '/vagrant', disabled: true
+
+            # Internal em1 port to RE
+            vqfxpfe.vm.network 'private_network', 
+                auto_config: false, 
+                nic_type: '82540EM', 
+                virtualbox__intnet: "#{UUID}_spine#{id}_internal"
+
+            # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
+            #vqfxpfe.vm.provider "virtualbox" do |v|
+            #   v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            #end
+        end
+
+        ##########################
+        ## Routing Engine  #######
+        ##########################
+        config.vm.define re_name do |vqfx|
+            vqfx.vm.hostname = "spine#{id}"
+            vqfx.vm.box = 'juniper/vqfx10k-re'
+            vqfx.vm.boot_timeout = 600
+
+            # DO NOT REMOVE / NO VMtools installed
+            vqfx.vm.synced_folder '.', '/vagrant', disabled: true
+
+            # Internal em1 port to PFE
+            vqfx.vm.network 'private_network',
+                auto_config: false,
+                nic_type: '82540EM',
+                virtualbox__intnet: "#{UUID}_spine#{id}_internal"
+            
+            # Unused em2 port
+            vqfx.vm.network 'private_network',
+                auto_config: false,
+                nic_type: '82540EM',
+                virtualbox__intnet: "#{UUID}_reserved-bridge"
+
+            # em3 - em6 (xe-0/0/0 - xe-0/0/3)
+            (0..3).each do |seg_id|
+                vqfx.vm.network 'private_network',
+                    auto_config: false,
+                    nic_type: '82540EM',
+                    virtualbox__intnet: "#{UUID}_seg#{spine_port_map[id][seg_id]}"
+            end
+        end
+    end
+
+    ##########################
+    ## Leaf           #######
+    ##########################
+    (1..3).each do |id|
+        re_name  = ( "leaf" + id.to_s ).to_sym
+        pfe_name = ( "leaf" + id.to_s + "-pfe" ).to_sym
+        srv_name = ( "srv" + id.to_s ).to_sym
+
+        ##############################
+        ## Packet Forwarding Engine ##
+        ##############################
+        config.vm.define pfe_name do |vqfxpfe|
+            vqfxpfe.ssh.insert_key = false
+            vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
+            vqfxpfe.vm.boot_timeout = 600
+
+            # DO NOT REMOVE / NO VMtools installed ttt
+            vqfxpfe.vm.synced_folder '.', 
+                '/vagrant', disabled: true
+
+            # Internal em1 port to RE
+            vqfxpfe.vm.network 'private_network', 
+                auto_config: false, 
+                nic_type: '82540EM', 
+                virtualbox__intnet: "#{UUID}_leaf#{id}_internal"
+
+            # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
+            #vqfxpfe.vm.provider "virtualbox" do |v|
+            #   v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            #end
+        end
+
+        ##########################
+        ## Routing Engine  #######
+        ##########################
+        config.vm.define re_name do |vqfx|
+            vqfx.vm.hostname = "leaf#{id}"
+            vqfx.vm.box = 'juniper/vqfx10k-re'
+            vqfx.vm.boot_timeout = 600
+
+            # DO NOT REMOVE / NO VMtools installed
+            vqfx.vm.synced_folder '.', '/vagrant', disabled: true
+
+            # Internal em1 port to PFE
+            vqfx.vm.network 'private_network',
+                auto_config: false, 
+                nic_type: '82540EM', 
+                virtualbox__intnet: "#{UUID}_leaf#{id}_internal"
+            
+            # Unused em2 port
+            vqfx.vm.network 'private_network', 
+                auto_config: false, 
+                nic_type: '82540EM', 
+                virtualbox__intnet: "#{UUID}_reserved-bridge"
+            
+            # em3 - em4 (xe-0/0/0 - xe-0/0/1)
+            (0..1).each do |seg_id|
+                vqfx.vm.network 'private_network', 
+                    auto_config: false, 
+                    nic_type: '82540EM', 
+                    virtualbox__intnet: "#{UUID}_seg#{leaf_port_map[id][seg_id]}"
+            end
+
+            # em5 (xe-0/0/2) facing server
+            vqfx.vm.network 'private_network', 
+                auto_config: false, 
+                nic_type: '82540EM', 
+                virtualbox__intnet: "#{UUID}_server_#{id}"
+        end
+
+        ##########################
+        ## Server          #######
+        ##########################
+        config.vm.define srv_name do |srv|
+            srv.vm.box = "robwc/minitrusty64"
+            srv.vm.hostname = "srv#{id}"
+            srv.vm.network 'private_network', ip: "192.168.#{id}.2", nic_type: '82540EM', virtualbox__intnet: "#{UUID}_server_#{id}"
+            srv.ssh.insert_key = true
+            srv.vm.provision "shell",
+               inline: "sudo route add -net 192.168.0.0 netmask 255.255.0.0 gw 192.168.#{id}.1"
+        end
+    end
+
+    #############################
+    # Box provisioning    #######
+    #############################
+    if !Vagrant::Util::Platform.windows?
+        config.vm.provision "ansible" do |ansible|
+            ansible.groups = {
+                "vqfx10k"      => ["spine1", "spine2", "leaf1", "leaf2", "leaf3" ],
+                "spine"        => ["spine1", "spine2"],
+                "leaf"         => ["leaf1", "leaf2", "leaf3" ],
+                "server"       => ["srv1", "srv2", "srv3" ],
+                "all:children" => ["vqfx10k", "server" ]
+            }
+            ansible.playbook = "pb.conf.all.commit.yaml"
+        end
+    end
+end

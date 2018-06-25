@@ -1,0 +1,5 @@
+---
+- name: Building Standard L3 configuration for Junos
+  template: >
+    src=main.conf.j2
+    dest={{ build_dir }}/junos-std-l3.conf.part

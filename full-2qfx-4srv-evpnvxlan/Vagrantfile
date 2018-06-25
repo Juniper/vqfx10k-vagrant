@@ -19,6 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.define pfe_name do |vqfxpfe|
             vqfxpfe.ssh.insert_key = false
             vqfxpfe.vm.box = 'juniper/vqfx10k-pfe'
+            vqfxpfe.vm.boot_timeout = 600
 
             # DO NOT REMOVE / NO VMtools installed ttt
             vqfxpfe.vm.synced_folder '.', 
@@ -31,9 +32,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 virtualbox__intnet: "#{UUID}_vqfx#{id}_internal"
 
             # In case you have limited resources, you can limit the CPU used per vqfx-pfe VM, usually 50% is good
-            vqfxpfe.vm.provider "virtualbox" do |v|
-               v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
-            end
+            #vqfxpfe.vm.provider "virtualbox" do |v|
+            #   v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            #end
         end
 
         ##########################
@@ -42,6 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.define re_name do |vqfx|
             vqfx.vm.hostname = "vqfx#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
+            vqfx.vm.boot_timeout = 600
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', 
