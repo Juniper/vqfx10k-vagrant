@@ -19,12 +19,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.ssh.insert_key = false
 
+    # Path used for routing engine console log.
+    Vagrant::Util::Platform.windows? ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
+
     ##########################
     ## Spine           #######
     ##########################
     (1..2).each do |id|
         re_name  = ( "spine" + id.to_s ).to_sym
-        re_log   = ( "spine" + id.to_s + ".log" )
         pfe_name = ( "spine" + id.to_s + "-pfe" ).to_sym
 
         ##############################
@@ -94,7 +96,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ##########################
     (1..3).each do |id|
         re_name  = ( "leaf" + id.to_s ).to_sym
-        re_log   = ( "leaf" + id.to_s + ".log" )
         pfe_name = ( "leaf" + id.to_s + "-pfe" ).to_sym
         srv_name = ( "srv" + id.to_s ).to_sym
 
