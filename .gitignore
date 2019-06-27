@@ -38,3 +38,6 @@ build/
 # Ignore vagrant dir and all generated Conf file
 .vagrant/
 *.conf
+
+# Ignore log files
+*.log

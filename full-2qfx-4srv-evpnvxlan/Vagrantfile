@@ -11,6 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     (1..2).each do |id|
         re_name  = ( "vqfx" + id.to_s ).to_sym
+        re_log   = ( "vqfx" + id.to_s + ".log" )
         pfe_name = ( "vqfx" + id.to_s + "-pfe" ).to_sym
         
         ##############################
@@ -44,6 +45,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.hostname = "vqfx#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
             vqfx.vm.boot_timeout = 600
+
+            # VM can be really slow unless COM1 is connected to something.
+            vqfx.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
+            end
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', 

@@ -24,11 +24,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ##########################
     (1..2).each do |id|
         re_name  = ( "spine" + id.to_s ).to_sym
+        re_log   = ( "spine" + id.to_s + ".log" )
 
         config.vm.define re_name do |vqfx|
             vqfx.vm.hostname = "spine#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
             vqfx.vm.boot_timeout = 600
+
+            # VM can be really slow unless COM1 is connected to something.
+            vqfx.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
+            end
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
@@ -54,12 +60,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ##########################
     (1..3).each do |id|
         re_name  = ( "leaf" + id.to_s ).to_sym
+        re_log   = ( "leaf" + id.to_s + ".log" )
         srv_name = ( "srv" + id.to_s ).to_sym
 
         config.vm.define re_name do |vqfx|
             vqfx.vm.hostname = "leaf#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
             vqfx.vm.boot_timeout = 600
+
+            # VM can be really slow unless COM1 is connected to something.
+            vqfx.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
+            end
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
