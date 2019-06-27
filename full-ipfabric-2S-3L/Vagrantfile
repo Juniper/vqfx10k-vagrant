@@ -19,6 +19,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.ssh.insert_key = false
 
+    # Path used for routing engine console log.
+    Vagrant::Util::Platform.windows? ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
+
     ##########################
     ## Spine           #######
     ##########################
@@ -57,6 +60,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.hostname = "spine#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
             vqfx.vm.boot_timeout = 600
+
+            # VM can be really slow unless COM1 is connected to something.
+            vqfx.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
+            end
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
@@ -122,6 +130,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.hostname = "leaf#{id}"
             vqfx.vm.box = 'juniper/vqfx10k-re'
             vqfx.vm.boot_timeout = 600
+
+            # VM can be really slow unless COM1 is connected to something.
+            vqfx.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
+            end
 
             # DO NOT REMOVE / NO VMtools installed
             vqfx.vm.synced_folder '.', '/vagrant', disabled: true
