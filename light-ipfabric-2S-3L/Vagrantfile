@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.ssh.insert_key = false
 
     # Path used for routing engine console log.
-    Vagrant::Util::Platform.windows? ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
+    File.file?("NUL") ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
 
     ##########################
     ## Spine           #######

@@ -46,7 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.boot_timeout = 600
 
             # VM can be really slow unless COM1 is connected to something.
-            Vagrant::Util::Platform.windows? ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
+            File.file?("NUL") ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
             vqfx.vm.provider "virtualbox" do |v|
                 v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
             end
