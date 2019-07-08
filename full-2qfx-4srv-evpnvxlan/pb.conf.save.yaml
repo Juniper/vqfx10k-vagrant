@@ -10,7 +10,7 @@
       juniper_junos_config:
         retrieve: committed
         host: "{{ ansible_ssh_host }}"
-        port: "{{ ansible_ssh_port }}"
+        port: "{{ ansible_ssh_port|string }}"
         user: root
         passwd: Juniper
         format: text
