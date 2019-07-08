@@ -189,6 +189,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Box provisioning    #######
     #############################
     config.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
         ansible.groups = {
             "vqfx10k"      => ["spine1", "spine2", "leaf1", "leaf2", "leaf3" ],
             "spine"        => ["spine1", "spine2"],

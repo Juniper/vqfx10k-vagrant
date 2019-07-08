@@ -67,10 +67,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ## Box provisioning        ###
     ##############################
     config.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
         ansible.groups = {
             "vqfx10k" => ["vqfx1", "vqfx2" ],
-            "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
-            "all:children" => ["vqfx10k", "vqfx10k-pfe"]
+            "vqfx10kpfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
+            "all:children" => ["vqfx10k", "vqfx10kpfe"]
         }
         ansible.playbook = "pb.conf.all.commit.yaml"
     end
