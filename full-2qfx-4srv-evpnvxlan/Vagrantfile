@@ -127,6 +127,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ##############################
     config.vm.provision "ansible" do |ansible|
         ansible.compatibility_mode = "2.0"
+        ansible.config_file = "ansible.cfg"
         ansible.groups = {
             "vqfx10k" => ["vqfx1", "vqfx2" ],
             "vqfx10kpfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
