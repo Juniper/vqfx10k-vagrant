@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# On Windows, only supported if running under Linux Subsystem for Windows
+if Vagrant::Util::Platform.windows?
+    puts 'Linux Subsystem for Windows required on Windows hosts.  Please refer to Windows.md for further instruction.'
+    abort 
+end
+
 VAGRANTFILE_API_VERSION = "2"
 
 UUID = "fab1"
@@ -46,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vqfx.vm.boot_timeout = 600
 
             # VM can be really slow unless COM1 is connected to something.
-            Vagrant::Util::Platform.windows? ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
+            (File.exist?("/proc/version") and File.readlines("/proc/version").grep(/(Microsoft|WSL)/).size > 0) ? ( re_log = "NUL" ) : ( re_log = "/dev/null" )
             vqfx.vm.provider "virtualbox" do |v|
                 v.customize ["modifyvm", :id, "--uartmode1", "file", re_log]
             end
@@ -118,16 +124,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     ##############################
     ## Box provisioning        ###
-    ## exclude Windows host    ###
     ##############################
-    if !Vagrant::Util::Platform.windows?
-        config.vm.provision "ansible" do |ansible|
-            ansible.groups = {
-                "vqfx10k" => ["vqfx1", "vqfx2" ],
-                "vqfx10k-pfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
-                "all:children" => ["vqfx10k", "vqfx10k-pfe"]
-            }
-            ansible.playbook = "pb.conf.all.commit.yaml"
-        end
+    config.vm.provision "ansible" do |ansible|
+        ansible.compatibility_mode = "2.0"
+        ansible.config_file = "ansible.cfg"
+        ansible.groups = {
+            "vqfx10k" => ["vqfx1", "vqfx2" ],
+            "vqfx10kpfe"  => ["vqfx1-pfe", "vqfx2-pfe"],
+            "all:children" => ["vqfx10k", "vqfx10kpfe"]
+        }
+        ansible.playbook = "pb.conf.all.commit.yaml"
     end
 end

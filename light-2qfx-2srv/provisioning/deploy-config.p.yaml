@@ -13,7 +13,7 @@
         load: 'override'
         src: "/tmp/{{ inventory_hostname }}.conf"
         host: "{{ ansible_ssh_host }}"
-        port: "{{ ansible_ssh_port }}"
+        port: "{{ ansible_ssh_port|string }}"
         user: root
         passwd: Juniper
         format: text

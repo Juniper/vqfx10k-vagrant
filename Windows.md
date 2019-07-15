@@ -51,8 +51,19 @@ There are many pre-built labs available publicly on GitHub that you can download
 11. Install the Juniper.junos role in WSL
 	* sudo ansible-galaxy install Juniper.junos
 	* The Juniper.junos role allows us to use functions specifically for Junos devices. If you experience any errors that mention this role, or point to juniper_junos_config, it's likely it's a problem with this role. Make sure it's either in the same directory where you're running 'vagrant up' or your ansible.cfg file points to it.
-	
-12. Use Vagrant to spin up devices
+
+12. Remount the user's file system as explained in the this blog post https://devblogs.microsoft.com/commandline/chmod-chown-wsl-improvements/.  Usually you would do the following commands:
+```
+cd /root
+umount /mnt/c
+mount -t drvfs C: /mnt/c -o metadata,umask=22,fmask=111
+```
+You do this to prevent ssh from failing with a insecure key error, you will have to redo this whenever you restart your windows box or the linux subsystem (sorry).  If you find that you can't "vagrant ssh" to any of the boxes without being prompted for a password then you can fix that by running the following command:
+```
+chmod 600 /mnt/c/Users/<username>/.vagrant.d/insecure_private_key
+```
+
+13. Use Vagrant to spin up devices
 	* vagrant up
 	* After typing 'vagrant up' devices will start spinning up in VirtualBox. VirtualBox does not need to be open, but you can open it to monitor status.
 	* The vagrant file will also call Ansible to configure the devices. 
