@@ -150,7 +150,6 @@ vlans {
         l3-interface irb.{{ vlan.vxlan_id }};
         vxlan {
             vni {{ vlan.vxlan_id }};
-            ingress-node-replication;
         }
     }
 {% endfor %}
